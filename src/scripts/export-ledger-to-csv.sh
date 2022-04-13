@@ -12,7 +12,8 @@ LEDGER_HOME="/home/natew/Dropbox/Finance"
 cd $LEDGER_HOME
 
 # convert all .ledger and .dat files to csv
-for LEDGER_FILE in $(ls *.ledger *.dat); do
+LEDGER_FILES=$(ls *.ledger *.dat)
+for LEDGER_FILE in LEDGER_FILES; do
 
     # remove file extension, grab base file name
     LEDGER_FILE_NAME=""
@@ -24,5 +25,5 @@ for LEDGER_FILE in $(ls *.ledger *.dat); do
     fi
 
     # export csv data to project directory
-    ledger -f $LEDGER_FILE csv > "$PROJECT_HOME/data/$LEDGER_FILE_NAME.csv"
+    ledger -f $LEDGER_FILE csv > "$PROJECT_HOME/data/ledger-csv/$LEDGER_FILE_NAME.csv"
 done
