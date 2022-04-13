@@ -16,3 +16,4 @@ Cargo.lock
 # Ingore Org-mode files (expect for README)
 *.org
 !README.org
+/data/
