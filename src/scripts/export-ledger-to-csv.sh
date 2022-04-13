@@ -27,9 +27,23 @@ for LEDGER_FILE in $LEDGER_FILES; do
     ledger -f $LEDGER_FILE csv > "$PROJECT_HOME/data/ledger-csv/$LEDGER_FILE_NAME.csv"
 done
 
-LOG_FILE_PATH="$PROJECT_HOME/data/logs/processed-ledger-files.txt"
-if [[ -f "$LOG_FILE_PATH" ]]; then
-    echo "hi there"
+LOG_FILE="$PROJECT_HOME/data/logs/processed-ledger-files.txt"
+if [[ -f "$LOG_FILE" ]]; then
+    NEW_FILE_COUNTER=0
+    for FILE in $LEDGER_FILES; do
+        if grep -Fxq "$FILE" "$LOG_FILE"; then
+            echo "Already processed $FILE"
+        else
+            echo "Adding data from $FILE ..."
+            echo "$FILE" >> $LOG_FILE
+            ((NEW_FILE_COUNTER++))
+        fi
+    done
+
+    if [[ $NEW_FILE_COUNTER != 0 ]]; then
+        echo "$NEW_FILE_COUNTER new files processed!"
+    fi
+
 else
-    echo "$LEDGER_FILES" > "$LOG_FILE_PATH"
+    echo "$LEDGER_FILES" > "$LOG_FILE"
 fi
