@@ -4,14 +4,16 @@ use std::fs;
 use std::path::Path;
 use std::process::Command;
 
-const LEDGER_HOME: &str = "/home/natew/Dropbox/Finance/";
-
 // handle collecting ledger files and exporting data to csv
 pub fn export_ledger_data() {
   let mut ledger_files: Vec<String> = Vec::new();
 
   // loop through all files in LEDGER_HOME
-  for file in fs::read_dir(Path::new(&LEDGER_HOME)).unwrap() {
+  for file in fs::read_dir(Path::new(
+    &env::var("LEDGER_HOME").expect("error loading LEDGER_HOME from .env"),
+  ))
+  .unwrap()
+  {
     let file_name_os_str = file.unwrap().path();
     let file_name_str = file_name_os_str.to_str().unwrap();
 
@@ -66,5 +68,5 @@ mod tests {
   /// check that all generated have .csv file extension
   fn check_all_files_csv() {}
 
-	// TODO add more tests
+  // TODO add more tests
 }
