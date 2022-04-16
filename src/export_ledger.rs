@@ -54,3 +54,17 @@ fn execute_ledger_export(ledger_files: Vec<String>) {
       .expect("Error writing to csv file.");
   }
 }
+
+#[cfg(test)]
+mod tests {
+
+  #[test]
+  /// check that generated files aren't empty
+  fn check_files_not_empty() {}
+
+  #[test]
+  /// check that all generated have .csv file extension
+  fn check_all_files_csv() {}
+
+	// TODO add more tests
+}

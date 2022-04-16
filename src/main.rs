@@ -1,6 +1,7 @@
-pub mod export_ledger;
 pub mod models;
 pub mod schema;
+
+mod export_ledger;
 
 #[macro_use]
 extern crate diesel;
