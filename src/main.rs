@@ -8,6 +8,6 @@ extern crate diesel;
 extern crate dotenv;
 
 fn main() {
-  // export ledger data into csv
-  export_ledger::export_ledger_data();
+    // export ledger data into csv
+    export_ledger::export_ledger_data();
 }
