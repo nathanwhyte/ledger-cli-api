@@ -67,8 +67,8 @@ mod tests {
   use super::*;
 
   #[test]
-  /// check that generated files aren't empty
-  fn check_files_not_empty() {
+  /// test that generated files aren't empty
+  fn test_files_not_empty() {
     dotenv().ok();
     for file in fs::read_dir(Path::new(
       &env::var("CSV_DATA_HOME").expect("error loading CSV_DATA_HOME from .env"),
@@ -76,7 +76,7 @@ mod tests {
     .unwrap()
     {
       println!(
-        "checking {} ... ",
+        "testing {} ... ",
         &file
           .as_ref()
           .unwrap()
@@ -92,8 +92,8 @@ mod tests {
   }
 
   #[test]
-  /// check that all generated have .csv file extension
-  fn check_all_files_csv() {
+  /// test that all generated have .csv file extension
+  fn test_all_files_csv() {
     dotenv().ok();
     for file in fs::read_dir(Path::new(
       &env::var("CSV_DATA_HOME").expect("error loading CSV_DATA_HOME from .env"),
