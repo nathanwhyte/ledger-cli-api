@@ -1,4 +1,6 @@
+use dotenv::dotenv;
 use std::env;
+
 use std::ffi::OsStr;
 use std::fs;
 use std::path::Path;
@@ -6,6 +8,8 @@ use std::process::Command;
 
 // handle collecting ledger files and exporting data to csv
 pub fn export_ledger_data() {
+  dotenv().ok();
+
   let mut ledger_files: Vec<String> = Vec::new();
 
   // loop through all files in LEDGER_HOME
@@ -60,13 +64,47 @@ fn execute_ledger_export(ledger_files: Vec<String>) {
 #[cfg(test)]
 mod tests {
 
+  use super::*;
+
   #[test]
   /// check that generated files aren't empty
-  fn check_files_not_empty() {}
+  fn check_files_not_empty() {
+    dotenv().ok();
+    for file in fs::read_dir(Path::new(
+      &env::var("CSV_DATA_HOME").expect("error loading CSV_DATA_HOME from .env"),
+    ))
+    .unwrap()
+    {
+      println!(
+        "checking {} ... ",
+        &file
+          .as_ref()
+          .unwrap()
+          .file_name()
+          .as_os_str()
+          .to_str()
+          .unwrap()
+      );
+      let file_string =
+        fs::read_to_string(file.unwrap().path().as_os_str()).expect("error reading file");
+      assert!(!file_string.is_empty());
+    }
+  }
 
   #[test]
   /// check that all generated have .csv file extension
-  fn check_all_files_csv() {}
+  fn check_all_files_csv() {
+    dotenv().ok();
+    for file in fs::read_dir(Path::new(
+      &env::var("CSV_DATA_HOME").expect("error loading CSV_DATA_HOME from .env"),
+    ))
+    .unwrap()
+    {
+      let file_path = file.unwrap().path();
+      let file_extension = file_path.extension().unwrap().to_str().unwrap();
+      assert_eq!(file_extension, "csv");
+    }
+  }
 
   // TODO add more tests
 }
