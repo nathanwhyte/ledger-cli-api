@@ -7,7 +7,7 @@ table! {
     credit -> Bool,
     amount -> Float8,
     comment -> Varchar,
-	}
+    }
 }
 
 table! {
