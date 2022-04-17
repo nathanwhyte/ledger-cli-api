@@ -19,10 +19,9 @@ pub fn export_ledger_data() {
     .unwrap()
     {
         let file_name_os_str = file.unwrap().path();
-        let file_name_str = file_name_os_str.to_str().unwrap();
-
+        let file_name_str: &str = file_name_os_str.to_str().unwrap();
         // grab supported files to be exported
-        match Path::new(file_name_str.clone())
+        match Path::new(file_name_str)
             .extension()
             .and_then(OsStr::to_str)
         {
@@ -31,7 +30,6 @@ pub fn export_ledger_data() {
             _ => continue,
         }
     }
-
     execute_ledger_export(ledger_files);
 }
 
@@ -52,8 +50,8 @@ fn execute_ledger_export(ledger_files: Vec<String>) {
         let mut csv_file_path =
             String::from(env::current_dir().unwrap().as_os_str().to_str().unwrap());
         csv_file_path.push_str("/data/ledger-csv/");
-        let ledger_file_name = String::from(ledger_file_path.rsplit_once("/").unwrap().1);
-        csv_file_path.push_str(ledger_file_name.split_once(".").unwrap().0);
+        let ledger_file_name = String::from(ledger_file_path.rsplit_once('/').unwrap().1);
+        csv_file_path.push_str(ledger_file_name.split_once('.').unwrap().0);
         csv_file_path.push_str(".csv");
 
         // write to csv file
