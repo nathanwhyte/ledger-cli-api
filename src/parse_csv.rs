@@ -35,3 +35,18 @@ pub fn handle_csv_parse() {
         // TODO construct LedgerTransaction and LedgerEntry structs (use db_utils)
     }
 }
+
+#[cfg(test)]
+mod tests {
+  // use super::*;
+
+  #[test]
+  /// test that input from csv files matches data expected
+  /// to order fill database tables
+  fn test_input_matches_expected_for_models() {}
+
+  #[test]
+  /// test that input from csv is not null for columns that
+  /// specify 'not null' for their value
+  fn check_input_expected_not_null() {}
+}
