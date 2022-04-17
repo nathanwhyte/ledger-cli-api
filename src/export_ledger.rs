@@ -1,10 +1,5 @@
 use dotenv::dotenv;
-use std::env;
-
-use std::ffi::OsStr;
-use std::fs;
-use std::path::Path;
-use std::process::Command;
+use std::{env, ffi::OsStr, fs, path::Path, process::Command};
 
 // handle collecting ledger files and exporting data to csv
 pub fn export_ledger_data() {
@@ -21,10 +16,7 @@ pub fn export_ledger_data() {
         let file_name_os_str = file.unwrap().path();
         let file_name_str: &str = file_name_os_str.to_str().unwrap();
         // grab supported files to be exported
-        match Path::new(file_name_str)
-            .extension()
-            .and_then(OsStr::to_str)
-        {
+        match Path::new(file_name_str).extension().and_then(OsStr::to_str) {
             Some("ledger") => ledger_files.push(String::from(file_name_str)),
             Some("dat") => ledger_files.push(String::from(file_name_str)),
             _ => continue,

@@ -20,7 +20,4 @@ table! {
 
 joinable!(ledger_entries -> ledger_transactions (transaction_id));
 
-allow_tables_to_appear_in_same_query!(
-    ledger_entries,
-    ledger_transactions,
-);
+allow_tables_to_appear_in_same_query!(ledger_entries, ledger_transactions,);
