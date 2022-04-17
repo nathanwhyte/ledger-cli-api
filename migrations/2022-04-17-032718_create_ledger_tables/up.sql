@@ -1,12 +1,12 @@
 -- Your SQL goes here
 
-create table ledger_transaction (
+create table ledger_transactions (
   id            serial  primary key,
-  date_created  date    not null,
+  date_created  varchar not null,
   memo          varchar not null
 );
 
-create table ledger_entry (
+create table ledger_entries (
   id                 serial  primary key,
   transaction_id     serial  not null,
   bucket             varchar not null,
@@ -15,5 +15,5 @@ create table ledger_entry (
   amount             float   not null,
   comment            varchar not null,
 
-  foreign key (transaction_id) references ledger_transaction (id)
+  foreign key (transaction_id) references ledger_transactions (id)
 );
