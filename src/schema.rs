@@ -2,19 +2,19 @@ table! {
     ledger_entries (id) {
         id -> Int4,
         transaction_id -> Int4,
-        bucket -> Varchar,
-        currency -> Nullable<Varchar>,
+        bucket -> Text,
+        currency -> Nullable<Text>,
         credit -> Bool,
         amount -> Float8,
-        comment -> Varchar,
+        comment -> Nullable<Text>,
     }
 }
 
 table! {
     ledger_transactions (id) {
         id -> Int4,
-        date_created -> Varchar,
-        memo -> Varchar,
+        date_created -> Text,
+        memo -> Text,
     }
 }
 
