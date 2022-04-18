@@ -1,10 +1,8 @@
-use crate::db_utils::db_utils::establish_connection;
-
-// use super::db_utils;
+use super::db_utils;
 
 use csv::{ReaderBuilder, StringRecord};
 use dotenv::dotenv;
-use std::{env, fs, path::Path};
+use std::{collections::HashSet, env, fs, path::Path};
 
 pub fn handle_csv_parse() {
     dotenv().ok();
@@ -20,33 +18,65 @@ pub fn handle_csv_parse() {
             .from_path(file.unwrap().path())
             .unwrap();
 
-        // get a Vec with items being Vec with parsed csv data
-        let csv_data = csv_reader
+        let connection = db_utils::establish_connection();
+        let mut transactions: HashSet<String> = HashSet::new();
+        let mut current_transaction_id = 0;
+
+        for csv_line in csv_reader
             .records()
             .collect::<Result<Vec<StringRecord>, csv::Error>>()
-            .unwrap();
+            .unwrap()
+        {
+            println!("{:?}", csv_line);
 
-        for entry in csv_data {
-            println!("{:?}", entry.get(0));
+            // fields for NewLedgerTransaction
+            let new_date_created = csv_line.get(0).unwrap().to_string();
+            let new_memo = csv_line.get(2).unwrap().to_string();
+
+            // add memo to set, check if already processed
+            // if not already processed, add new transaction to database
+            if transactions.insert(new_memo.clone()) {
+                current_transaction_id =
+                    db_utils::insert_ledger_transaction(&connection, new_date_created, new_memo).id;
+            }
+
+            // fields for NewLedgerEntry
+            let bucket = csv_line.get(3).unwrap().to_string();
+            let currency = match csv_line.get(4).unwrap().is_empty() {
+                true => None,
+                false => Some(csv_line.get(4).unwrap().to_string()),
+            };
+            let credit = csv_line.get(5).unwrap().parse::<f64>().unwrap() > 0.0;
+            let amount = csv_line.get(5).unwrap().parse::<f64>().unwrap();
+            let comment = match csv_line.get(7).unwrap().is_empty() {
+                true => None,
+                false => Some(csv_line.get(7).unwrap().to_string()),
+            };
+
+            db_utils::insert_ledger_entry(
+                &connection,
+                current_transaction_id,
+                bucket,
+                currency,
+                credit,
+                amount,
+                comment,
+            );
         }
-
-        let _connection = establish_connection();
-
-        // TODO construct LedgerTransaction and LedgerEntry structs (use db_utils)
     }
 }
 
 #[cfg(test)]
 mod tests {
-  // use super::*;
+    // use super::*;
 
-  #[test]
-  /// test that input from csv files matches data expected
-  /// to order fill database tables
-  fn test_input_matches_expected_for_models() {}
+    #[test]
+    /// test that input from csv files matches data expected
+    /// to order fill database tables
+    fn test_input_matches_expected_for_models() {}
 
-  #[test]
-  /// test that input from csv is not null for columns that
-  /// specify 'not null' for their value
-  fn check_input_expected_not_null() {}
+    #[test]
+    /// test that input from csv is not null for columns that
+    /// specify 'not null' for their value
+    fn check_input_expected_not_null() {}
 }
